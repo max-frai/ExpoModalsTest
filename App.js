@@ -1,21 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {useEffect} from "react";
+import {Text} from "react-native";
+import {NavigationContainer} from "@react-navigation/native";
+import * as ImagePicker from "expo-image-picker";
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import {createStackNavigator} from "@react-navigation/stack";
+
+const Feed = () => {
+    useEffect(() => {
+        async function logic() {
+            await ImagePicker.requestMediaLibraryPermissionsAsync();
+            await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+            });
+        }
+
+        logic();
+    }, []);
+    return <Text>FEED</Text>;
+};
+
+const Tab = createBottomTabNavigator();
+
+const AppTabs = () => {
+    return (
+        <Tab.Navigator initialRouteName="Feed">
+            <Tab.Screen name="Feed" component={Feed} />
+        </Tab.Navigator>
+    );
+};
+
+const Stack = createStackNavigator();
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    return (
+        <NavigationContainer>
+            <Stack.Navigator initialRouteName="Tabs">
+                <Stack.Screen name="Tabs" component={AppTabs} />
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
